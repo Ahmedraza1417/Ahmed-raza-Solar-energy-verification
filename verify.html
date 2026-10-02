@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>System Verification — Ahmed Raza Solar Energy</title>
+<style>
+body{margin:0;background:#f5f7fb;font-family:Arial,sans-serif;color:#172033}
+.wrap{max-width:760px;margin:0 auto;padding:24px}
+.card{background:#fff;border-radius:18px;padding:24px;margin:16px 0;box-shadow:0 8px 30px rgba(20,30,50,.08)}
+h1{margin:0 0 6px;font-size:28px}
+.muted{color:#667085}
+.badge{display:inline-block;padding:7px 12px;border-radius:999px;background:#e8f7ee;color:#087a3d;font-weight:700}
+.row{display:grid;grid-template-columns:180px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid #edf0f5}
+img.photo{width:100%;max-height:420px;object-fit:cover;border-radius:12px;margin-top:10px}
+a.btn{display:inline-block;background:#1877f2;color:white;text-decoration:none;padding:12px 18px;border-radius:10px;font-weight:700}
+@media(max-width:600px){.wrap{padding:14px}.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>Ahmed Raza Solar Energy</h1>
+    <div class="muted">Solar Energy Solutions • Since 2018 • Karachi, Orangi Town, Bismillah Market</div>
+    <p><span class="badge">✓ Verified Installation</span></p>
+    <a class="btn" href="https://www.facebook.com/" target="_blank" rel="noopener">Visit Our Facebook Page</a>
+  </div>
+  <div id="content" class="card"></div>
+</div>
+<script>
+const el=document.getElementById('content');
+function esc(s){return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+function row(k,v){if(v===undefined||v===null||v==='')return '';return '<div class="row"><b>'+esc(k)+'</b><span>'+esc(v)+'</span></div>';}
+function load(){
+  const raw=new URLSearchParams(location.search).get('data');
+  if(!raw){el.innerHTML='<h2>Verification information not found</h2><p class="muted">This QR link does not contain a customer record.</p>';return;}
+  try{
+    const d=JSON.parse(raw);
+    let html='<h2>Solar System Details</h2>';
+    html+=row('System ID',d.System_ID);
+    html+=row('Customer',d.Customer);
+    html+=row('System Size',d.System_kW ? d.System_kW+' kW' : '');
+    html+=row('Installation Date',d.Installation_Date);
+    html+=row('Panel',d.Panel);
+    html+=row('Panel Serial',d.Panel_Serial);
+    html+=row('Panel Warranty End',d.Panel_Warranty_End);
+    html+=row('Inverter',d.Inverter);
+    html+=row('Inverter Serial',d.Inverter_Serial);
+    html+=row('Inverter Warranty End',d.Inverter_Warranty_End);
+    html+=row('Battery',d.Battery);
+    html+=row('Battery Serial',d.Battery_Serial);
+    html+=row('Battery Warranty End',d.Battery_Warranty_End);
+    html+=row('Company Phone',d.Phone || '03120253694');
+    if(d.Photo1||d.Photo2||d.Photo3||d.Photo4){
+      html+='<h2 style="margin-top:24px">Installation Photos</h2>';
+      [d.Photo1,d.Photo2,d.Photo3,d.Photo4].forEach(p=>{if(p)html+='<img class="photo" src="'+esc(p)+'" alt="Installation photo">';});
+    }
+    el.innerHTML=html;
+  }catch(e){
+    el.innerHTML='<h2>Invalid verification link</h2><p class="muted">The QR data could not be read.</p>';
+  }
+}
+load();
+</script>
+</body>
+</html>
